@@ -4,42 +4,42 @@ namespace KazushiGame;
 
 class Battle
 {
-    private $turn = [];
+    private static $turn = [];
 
-    public function set_turn($turn)
+    public static function set_turn($turn)
     {
-        $this->turn[] = $turn;
+        self::$turn[] = $turn;
     }
 
-    public function get_turn()
+    public static function get_turn()
     {
-        return $this->turn;
+        return self::$turn;
     }
 
-    public function start()
+    public static function start()
     {
         echo "バトルスタート!" . PHP_EOL;
     }
 
-    public function show_turn()
+    public static function show_turn()
     {
-        echo "ターン数 : " . (count($this->turn) + 1) . PHP_EOL;
+        echo "ターン数 : " . (count(self::$turn) + 1) . PHP_EOL;
     }
 
-    public function select_action() {
+    public static function select_action() {
         echo "以下のいずれかの番号を選択してください。" . PHP_EOL;
         echo "1. 攻撃する" . PHP_EOL;
         echo "2. 防御する" . PHP_EOL;
         echo "3. ためる" . PHP_EOL;
         echo "4. 魔法を発動する" . PHP_EOL;
-        if ((count($this->get_turn()) + 1) % 5 === 0) {
+        if ((count(self::$turn) + 1) % 5 === 0) {
             echo "5. 必殺技を発動する" . PHP_EOL;
         }
         $number = trim(fgets(STDIN));
         return $number;
     }
 
-    public function attack($active, $passive, $rate)
+    public static function attack($active, $passive, $rate)
     {
         echo $active->get_name() . "の攻撃" . PHP_EOL;
         if (($active->get_atk() - $passive->get_def()) > 0) {
@@ -58,7 +58,7 @@ class Battle
         }
     }
 
-    public function magic($active, $passive, $rate)
+    public static function magic($active, $passive, $rate)
     {
         echo $active->get_name() . "の魔法" . PHP_EOL;
         $damage = $active->get_mind() * $rate;
@@ -73,7 +73,7 @@ class Battle
         }
     }
 
-    public function guard($active)
+    public static function guard($active)
     {
         echo $active->get_name() . "はガードした。" . PHP_EOL;
         $guard = $active->get_def() * 3;
@@ -81,14 +81,14 @@ class Battle
         echo "防御力が一時的に3倍になった。防御力 : " . $active->get_def() . PHP_EOL;
     }
 
-    public function cancelGuard($active)
+    public static function cancelGuard($active)
     {
         $cancelGuard = $active->get_def() / 3;
         $active->set_def($cancelGuard);
         echo $active->get_name() . "の防御力が" . $active->get_def() . "に戻った。" . PHP_EOL;
     }
 
-    public function accumulate($active)
+    public static function accumulate($active)
     {
         echo $active->get_name() . "はためるを発動。" . PHP_EOL;
         $accumulate = $active->get_atk() * 3;
@@ -96,27 +96,27 @@ class Battle
         echo "攻撃力が一時的に3倍になった。攻撃力 : " . $active->get_atk() . PHP_EOL;
     }
 
-    public function cancelAccumulate($active)
+    public static function cancelAccumulate($active)
     {
         $cancelAccumulate = $active->get_atk() / 3;
         $active->set_atk($cancelAccumulate);
         echo $active->get_name() . "の攻撃力が" . $active->get_atk() . "に戻った。" . PHP_EOL;
     }
 
-    public function show_special_attack_gauge()
+    public static function show_special_attack_gauge()
     {
-        if ((count($this->turn) + 1) % 5 === 0) {
+        if ((count(self::$turn) + 1) % 5 === 0) {
             echo "必殺技ゲージ : 5/5" . PHP_EOL;
         } else {
-            echo "必殺技ゲージ : " . (count($this->turn) + 1) % 5 . "/5" . PHP_EOL;
+            echo "必殺技ゲージ : " . (count(self::$turn) + 1) % 5 . "/5" . PHP_EOL;
         }
     }
 
-    public function special_attack($active, $passive)
+    public static function special_attack($active, $passive)
     {
         echo $active->get_name() . "は必殺技を発動!" . PHP_EOL;
         if ($active->get_job() === "ハンター") {
-            $this->attack($active, $passive, 5);
+            self::attack($active, $passive, 5);
 
         } elseif ($active->get_job() === "レンジャー") {
             echo $active->get_name() . "の攻撃" . PHP_EOL;
@@ -138,11 +138,11 @@ class Battle
             }
 
         } elseif ($active->get_job() === "フォース") {
-            $this->magic($active, $passive, 5);
+            self::magic($active, $passive, 5);
         }
     }
 
-    public function win($player, $enemy)
+    public static function win($player, $enemy)
     {
         $exp = $player->get_exp() - $enemy->get_exp();
         $player->set_exp($exp);
@@ -151,7 +151,7 @@ class Battle
         }
     }
 
-    public function lose($player)
+    public static function lose($player)
     {
         echo $player->get_name() . "のHPが0になりました。" . PHP_EOL;
         echo "ゲームオーバー!" . PHP_EOL;

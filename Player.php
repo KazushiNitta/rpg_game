@@ -34,7 +34,6 @@ class Player extends Character
 
     public function levelUp()
     {
-        echo "" . PHP_EOL;
         echo $this->name . "のレベルが上がりました。" . PHP_EOL;
         $this->level++;
         if ($this->job === "ハンター") {
